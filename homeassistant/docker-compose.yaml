@@ -6,9 +6,9 @@ services:
     restart: unless-stopped
     image: homeassistant/home-assistant
     volumes:
-      - ${USERDIR}/docker/homeassistant:/config
+      - ./persistent/homeassistant/config:/config
       - /etc/localtime:/etc/localtime:ro
-      - ${USERDIR}/docker/shared:/shared
+      - ./persistent/homeassistant/shared:/shared
     network_mode: host
     privileged: true
     environment:
@@ -19,11 +19,11 @@ services:
     container_name: homeassistant
     image: homeassistant/home-assistant
     volumes:
-      # Local path where your home assistant config will be stored
       - ./config/ha:/config
       - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
-    network_mode: host
+    ports:
+      - "8123:8123"
     depends_on:
       - mariadb
     # user: "${LOCAL_USER}:${LOCAL_USER}"

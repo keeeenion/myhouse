@@ -10,3 +10,7 @@
 * Run ```make env``` to create a .env starting point
 * Start all the services ```make start```
 * Once finished run ```make down```
+
+## Access
+* Home assistant can be accessed on http://localhost:8123
+* Access homeassistant file system running ```make exec```
