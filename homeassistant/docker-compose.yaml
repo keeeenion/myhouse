@@ -1,0 +1,58 @@
+version: "3.9"
+services:
+
+  homeassistant:
+    container_name: homeassistant
+    restart: unless-stopped
+    image: homeassistant/home-assistant
+    volumes:
+      - ${USERDIR}/docker/homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+      - ${USERDIR}/docker/shared:/shared
+    network_mode: host
+    privileged: true
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+  homeassistant:
+    container_name: homeassistant
+    image: homeassistant/home-assistant
+    volumes:
+      # Local path where your home assistant config will be stored
+      - ./config/ha:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      - mariadb
+    # user: "${LOCAL_USER}:${LOCAL_USER}"
+
+  mariadb:
+    image: mariadb/server:10.3
+    container_name: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: ha_db
+      MYSQL_USER: homeassistant
+      MYSQL_PASSWORD: "${HA_MYSQL_PASSWORD}"
+    user: "${LOCAL_USER}:${LOCAL_USER}"
+    volumes:
+      - ./persistent/mariadb:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  # nodered:
+  #   container_name: nodered
+  #   image: nodered/node-red
+  #   ports:
+  #     - "1880:1880"
+  #   volumes:
+  #     - <local path>:/data
+  #   depends_on:
+  #     - homeassistant
+  #   environment:
+  #     TZ: "Europe/Amsterdam"
+  #   user: "${LOCAL_USER}:${LOCAL_USER}"
+  #   restart: unless-stopped
