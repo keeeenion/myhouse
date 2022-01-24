@@ -3,7 +3,7 @@
 ## Folder structure
 
 * homeassistant - configurations for homeassistant setup
-* myhouse - Unity project for the simulation
+* simulation - Unity project for the simulation
 
 ## Running
 * Import unity project to unity, read it's README
