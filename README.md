@@ -13,4 +13,5 @@
 
 ## Access
 * Home assistant can be accessed on http://localhost:8123
+* MQTT can be accesed form containers on mqtt://mqtt:8883
 * Access homeassistant file system running ```make exec```

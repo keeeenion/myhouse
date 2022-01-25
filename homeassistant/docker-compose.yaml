@@ -1,32 +1,27 @@
 version: "3.9"
 services:
-
-  homeassistant:
-    container_name: homeassistant
-    restart: unless-stopped
-    image: homeassistant/home-assistant
-    volumes:
-      - ./persistent/homeassistant/config:/config
-      - /etc/localtime:/etc/localtime:ro
-      - ./persistent/homeassistant/shared:/shared
-    network_mode: host
-    privileged: true
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
   homeassistant:
     container_name: homeassistant
     image: homeassistant/home-assistant
     volumes:
-      - ./config/ha:/config
+      - ./persistent/ha:/config
       - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
     ports:
       - "8123:8123"
     depends_on:
       - mariadb
-    # user: "${LOCAL_USER}:${LOCAL_USER}"
+
+  #https://techoverflow.net/2021/11/25/how-to-setup-standalone-mosquitto-mqtt-broker-using-docker-compose/
+  mqtt:
+    container_name: mqtt
+    image: eclipse-mosquitto
+    ports:
+      - "8883:8883"
+    volumes:
+      - ./config/mqtt:/mosquitto/config
+      - ./persistent/mqtt:/mosquitto/data
+      - ./logs/mqtt:/mosquitto/log
 
   mariadb:
     image: mariadb/server:10.3
